@@ -4,8 +4,9 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from mythings.corpus import chunk, ingest
-from mythings.engine import EngineRequest, EngineResult, NoopEngine
+from mythings.engine import NoopEngine
 from mythings.mastery import now_iso
+from mythings.testing import ScriptedEngine
 
 from myflashcards.flashcards import (
     build,
@@ -23,16 +24,6 @@ _TEXT = (
     "PCA projects data onto the leading eigenvectors of the covariance matrix."
 )
 _NOW = datetime(2026, 7, 11, 12, 0, tzinfo=UTC)
-
-
-class ScriptedEngine:
-    def __init__(self, reply: str) -> None:
-        self.reply = reply
-        self.calls: list[EngineRequest] = []
-
-    def run(self, request: EngineRequest) -> EngineResult:
-        self.calls.append(request)
-        return EngineResult(text=self.reply, data={})
 
 
 def _corpus():
