@@ -20,16 +20,12 @@ def corpus(tmp_path: Path) -> Path:
 
 
 def _fake_build(monkeypatch) -> None:
-    from mythings.engine import EngineResult
+    from mythings.testing import ScriptedEngine
 
     import myflashcards.cli as cli
 
-    class Fake:
-        def run(self, _request):
-            reply = '{"cards": [{"front": "E-step?", "back": "responsibilities"}]}'
-            return EngineResult(text=reply)
-
-    monkeypatch.setattr(cli, "_engine", lambda _name: Fake())
+    reply = '{"cards": [{"front": "E-step?", "back": "responsibilities"}]}'
+    monkeypatch.setattr(cli, "_engine", lambda _name: ScriptedEngine(reply=reply))
 
 
 def test_build_then_review_then_grade(corpus: Path, tmp_path: Path, monkeypatch,
