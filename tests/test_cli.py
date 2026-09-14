@@ -29,7 +29,7 @@ def _fake_build(monkeypatch) -> None:
             reply = '{"cards": [{"front": "E-step?", "back": "responsibilities"}]}'
             return EngineResult(text=reply)
 
-    monkeypatch.setattr(cli, "_engine", lambda _name: Fake())
+    monkeypatch.setattr(cli, "build_engine_from_args", lambda args: Fake())
 
 
 def test_build_then_review_then_grade(corpus: Path, tmp_path: Path, monkeypatch,

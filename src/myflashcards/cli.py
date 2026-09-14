@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from mythings.engine import ClaudeCLIEngine, Engine, NoopEngine
+from mythings.engine import build_engine_from_args
 from mythings.mastery import load, record
 
 from myflashcards.flashcards import (
@@ -19,10 +19,6 @@ from myflashcards.flashcards import (
 
 BACKLOG_LABEL = "my-flashcards"
 DEFAULT_LEDGER = Path(".mythings/mastery.jsonl")
-
-
-def _engine(name: str) -> Engine:
-    return NoopEngine() if name == "noop" else ClaudeCLIEngine()
 
 
 def _render_deck(cards: list[Card], *, reveal: bool) -> str:
@@ -69,7 +65,7 @@ def main(argv: list[str] | None = None) -> int:
         if not documents:
             print("no corpus files found")
             return 1
-        cards = build(args.topic, documents, chunks, _engine(args.engine),
+        cards = build(args.topic, documents, chunks, build_engine_from_args(args),
                       count=args.count, top=args.top)
         args.deck.parent.mkdir(parents=True, exist_ok=True)
         args.deck.write_text(to_toml(cards), encoding="utf-8")
